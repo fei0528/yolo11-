@@ -1,0 +1,18 @@
+dependencies:
+  espressif/coco_pose:
+    version: '*'
+  espressif/opencv:
+    version: "^4.7.0~6"          # 注意使用实际存在的版本号
+  espressif/esp32_p4_function_ev_board_noglib:
+    rules:
+    - if: target == esp32p4
+    version: '*'
+  espressif/esp32_s3_eye_noglib:
+    rules:
+    - if: target == esp32s3
+    version: '*'
+  espressif/usb: '*'
+  espressif/esp_video: "^2.1.0"
+  espressif/esp_cam_sensor: "^2.3.0"
+  espressif/esp_ipa:
+    version:    ">=2.0.0"
