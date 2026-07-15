@@ -1,0 +1,45 @@
+menu "Example Configuration"
+
+    choice DEVELOPMENT_BOARD_SELECTION
+        prompt "Select the development board you are using"
+        default BOARD_GENERIC
+        help
+            Select this option to choose the board for this example.
+
+        config ESP32_S3_USB_OTG
+            bool "ESP32 S3 USB OTG"
+
+        config BOARD_GENERIC
+            bool "BOARD GENERIC"
+
+    endchoice
+
+    menu "WiFi Settings"
+        config ESP_WIFI_SOFTAP_SSID
+            string "WiFi SoftAP SSID"
+            default "USB-AV-DEMO"
+            help
+                SoftAP SSID created by this example.
+
+        config ESP_WIFI_SOFTAP_PASSWORD
+            string "WiFi SoftAP Password"
+            default ""
+            help
+                SoftAP password. Leave empty to use an open network.
+
+        config ESP_WIFI_SOFTAP_MAX_STA
+            int "Maximal STA connections"
+            default 1
+            range 1 10
+            help
+                Maximum number of stations that can connect to the SoftAP.
+
+        config ESP_WIFI_AP_CHANNEL
+            int "WiFi SoftAP Channel"
+            default 6
+            range 1 13
+            help
+                SoftAP Wi-Fi channel.
+    endmenu
+
+endmenu

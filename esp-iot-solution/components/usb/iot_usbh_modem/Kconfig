@@ -1,0 +1,33 @@
+menu "IoT USB Host Modem"
+
+    config MODEM_OPERATION_RETRY_TIMES
+        int "Retry Times During modem operation"
+        default 5
+        help
+            Set retry times for modem operations
+
+    config MODEM_OPERATION_RETRY_DELAY_MS
+        int "Retry Delay(ms) During modem operation"
+        default 2000
+        help
+            Set retry delay between modem operations
+
+    config MODEM_RSSI_THRESHOLD
+        int "RSSI Threshold"
+        default 10
+        help
+            Set RSSI threshold for modem link with carrier base station
+
+    config MODEM_EXIT_PPP_WITH_AT_CMD
+        bool "Exit PPP by AT Command"
+        default y
+        help
+            Enable to exit PPP mode by AT command
+
+    config MODEM_EXIT_PPP_GAP_TIME_MS
+        int "Exit PPP Gap Time(ms)"
+        default 1000
+        help
+            Set gap time before exit PPP mode
+
+endmenu

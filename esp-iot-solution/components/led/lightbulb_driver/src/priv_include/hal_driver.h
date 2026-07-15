@@ -1,0 +1,124 @@
+/*
+ * SPDX-FileCopyrightText: 2022-2026 Espressif Systems (Shanghai) CO LTD
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#pragma once
+
+#include "lightbulb_utils.h"
+#include "lightbulb.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * @brief Map color channels to IDs
+ * @note Mapping rules
+ *
+ * | Rule 1 | Rule 2     | Rule 3
+ * |        |            |
+ * | RED    | RED        | RED
+ * | GREEN  | GREEN      | GREEN
+ * | BLUE   | BLUE       | BLUE
+ * | COLD   | CCT        | WHITE
+ * | WARM   | BRIGHTNESS | YELLOW
+ *
+ */
+#define CHANNEL_ID_RED                              0
+#define CHANNEL_ID_GREEN                            1
+#define CHANNEL_ID_BLUE                             2
+#define CHANNEL_ID_COLD_CCT_WHITE                   3
+#define CHANNEL_ID_WARM_BRIGHTNESS_YELLOW           4
+
+#define SELECT_COLOR_CHANNEL                        ((1 << CHANNEL_ID_RED) | (1 << CHANNEL_ID_GREEN) | (1 << CHANNEL_ID_BLUE))
+#define SELECT_WHITE_CHANNEL                        ((1 << CHANNEL_ID_COLD_CCT_WHITE) | (1 << CHANNEL_ID_WARM_BRIGHTNESS_YELLOW))
+#define SELECT_RED_CHANNEL                          (1 << CHANNEL_ID_RED)
+#define SELECT_GREEN_CHANNEL                        (1 << CHANNEL_ID_GREEN)
+#define SELECT_BLUE_CHANNEL                         (1 << CHANNEL_ID_BLUE)
+#define SELECT_COLD_CCT_WHITE_CHANNEL               (1 << CHANNEL_ID_COLD_CCT_WHITE)
+#define SELECT_WARM_BRIGHTNESS_YELLOW_CHANNEL       (1 << CHANNEL_ID_WARM_BRIGHTNESS_YELLOW)
+
+typedef struct {
+    lightbulb_driver_t type;
+    void *driver_data;
+} hal_config_t;
+
+typedef enum {
+    QUERY_MAX_INPUT_VALUE,
+    QUERY_GRAYSCALE_LEVEL,
+    QUERY_DRIVER_NAME,
+} hal_feature_query_list_t;
+
+typedef struct hal_context_s *hal_context_t;
+
+#ifdef CONFIG_ENABLE_PWM_DRIVER
+hal_context_t pwm_hal_output_init(void *driver_config, lightbulb_gamma_config_t *gamma);
+#endif
+
+#ifdef CONFIG_ENABLE_SM2182E_DRIVER
+hal_context_t sm2182e_hal_output_init(void *driver_config, lightbulb_gamma_config_t *gamma);
+#endif
+
+#ifdef CONFIG_ENABLE_SM2135EH_DRIVER
+hal_context_t sm2135eh_hal_output_init(void *driver_config, lightbulb_gamma_config_t *gamma);
+#endif
+
+#ifdef CONFIG_ENABLE_SM2x35EGH_DRIVER
+hal_context_t sm2x35egh_hal_output_init(void *driver_config, lightbulb_gamma_config_t *gamma);
+#endif
+
+#ifdef CONFIG_ENABLE_BP57x8D_DRIVER
+hal_context_t bp57x8d_hal_output_init(void *driver_config, lightbulb_gamma_config_t *gamma);
+#endif
+
+#ifdef CONFIG_ENABLE_BP1658CJ_DRIVER
+hal_context_t bp1658cj_hal_output_init(void *driver_config, lightbulb_gamma_config_t *gamma);
+#endif
+
+#ifdef CONFIG_ENABLE_KP18058_DRIVER
+hal_context_t kp18058_hal_output_init(void *driver_config, lightbulb_gamma_config_t *gamma);
+#endif
+
+#ifdef CONFIG_ENABLE_WS2812_DRIVER
+hal_context_t ws2812_hal_output_init(void *driver_config, lightbulb_gamma_config_t *gamma);
+#endif
+
+#ifdef CONFIG_ENABLE_SM16825E_DRIVER
+hal_context_t sm16825e_hal_output_init(void *driver_config, lightbulb_gamma_config_t *gamma);
+#endif
+
+esp_err_t hal_output_deinit(hal_context_t hal_ctx);
+esp_err_t hal_regist_channel(hal_context_t hal_ctx, int channel, gpio_num_t gpio_num);
+esp_err_t hal_get_driver_feature(hal_context_t hal_ctx, hal_feature_query_list_t type, void *out_data);
+esp_err_t hal_get_curve_table_value(hal_context_t hal_ctx, uint16_t input, uint16_t *output);
+esp_err_t hal_set_channel(hal_context_t hal_ctx, int channel, uint16_t value, uint16_t fade_ms);
+esp_err_t hal_set_channel_group(hal_context_t hal_ctx, uint16_t value[], uint8_t channel_mask, uint16_t fade_ms);
+esp_err_t hal_start_channel_action(hal_context_t hal_ctx, int channel, uint16_t value_min, uint16_t value_max, uint16_t period_ms, bool fade_flag);
+esp_err_t hal_start_channel_group_action(hal_context_t hal_ctx, uint16_t value_min[], uint16_t value_max[], uint8_t channel_mask, uint16_t period_ms, bool fade_flag);
+esp_err_t hal_stop_channel_action(hal_context_t hal_ctx, uint8_t channel_mask);
+esp_err_t hal_sleep_control(hal_context_t hal_ctx, bool enable_sleep);
+esp_err_t hal_gamma_table_create(uint16_t *output_gamma_table, uint16_t table_size, float gamma_curve_coefficient, int32_t grayscale_level);
+
+/**
+ * @brief To resolve some compilation warning issues
+ * @note cast between incompatible function types
+ *
+ */
+#ifdef CONFIG_ENABLE_SM2135EH_DRIVER
+static inline esp_err_t _sm2135eh_set_channel(sm2135eh_channel_t channel, uint16_t value)
+{
+    return sm2135eh_set_channel(channel, value);
+}
+#endif
+#ifdef CONFIG_ENABLE_WS2812_DRIVER
+static inline esp_err_t _ws2812_set_rgb_channel(uint16_t value_r, uint16_t value_g, uint16_t value_b)
+{
+    return ws2812_set_rgb_channel(value_r, value_g, value_b);
+}
+#endif
+
+#ifdef __cplusplus
+}
+#endif

@@ -1,0 +1,29 @@
+version: "2.2.0"
+targets:
+  - esp32s2
+  - esp32s3
+  - esp32s31
+  - esp32p4
+description: esp-iot-solution USB Host Modem driver
+url: https://github.com/espressif/esp-iot-solution
+repository: https://github.com/espressif/esp-iot-solution.git
+documentation: https://docs.espressif.com/projects/esp-iot-solution/en/latest/usb/usb_host/usb_ppp.html
+issues: https://github.com/espressif/esp-iot-solution/issues
+dependencies:
+  idf: ">=5.1"
+  cmake_utilities: "0.*"
+  iot_usbh_cdc:
+    version: "^3.1"
+    override_path: "../iot_usbh_cdc"
+  espressif/iot_eth:
+    version: "*"
+    override_path: ../../iot_eth
+  modem_at:
+    version: "*"
+    override_path: ../../modem_at
+
+examples:
+  - path: ../../../examples/usb/host/usb_cdc_4g_module
+sbom:
+  supplier: 'Organization: Espressif Systems (Shanghai) CO LTD'
+  originator: 'Organization: Espressif Systems (Shanghai) CO LTD'
