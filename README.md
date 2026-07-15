@@ -38,3 +38,4 @@ We provide the models as components, each of them has some configurable options.
 
 If model location is set to FLASH partition, please set this option to `partitions2.csv`
 
+to队友：p4芯片代码路径：yolo11_pose\esp-iot-solution\examples\camera\video_lcd_display
